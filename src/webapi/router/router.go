@@ -229,22 +229,26 @@ func configRoute(r *gin.Engine, version string) {
 		pages.POST("/busi-group/:id/tasks", jwtAuth(), user(), perm("/job-tasks/add"), bgrw(), taskAdd)
 		pages.GET("/busi-group/:id/task/*url", jwtAuth(), user(), perm("/job-tasks"), bgro(), taskProxy)
 		pages.PUT("/busi-group/:id/task/*url", jwtAuth(), user(), perm("/job-tasks/put"), bgrw(), taskProxy)
-	}
 
-	service := r.Group("/v1/n9e")
-	if len(config.C.BasicAuth) > 0 {
-		service.Use(gin.BasicAuth(config.C.BasicAuth))
+		//Open Api
+		pages.POST("/v1/InstallCluster", installCluster)
+		pages.POST("/v1/InitCluster", initCluster)
+		pages.POST("/v1/UninstallCluster", uninstallCluster)
+		pages.POST("/v1/ModifyLogDir", modifyLogDir)
+		pages.POST("/v1/DumpDatabase", dumpDatabase)
+		pages.POST("/v1/ModifyConfig", modifyConfig)
+		pages.POST("/v1/ShowConfig", showConfig)
+		pages.POST("/v1/DescribeClusterDetailedStatus", describeClusterDetailedStatus)
+		pages.POST("/v1/ExpandExecutor", expandExecutor)
+		pages.POST("/v1/ShrinkExecutor", shrinkExecutor)
+		pages.POST("/v1/StartCluster", startCluster)
+		pages.POST("/v1/StopCluster", stopCluster)
 	}
-	{
-		service.Any("/prometheus/*url", prometheusProxy)
-		service.POST("/users", userAddPost)
-
-		service.GET("/targets", targetGets)
-		service.DELETE("/targets", targetDel)
-		service.GET("/targets/tags", targetGetTags)
-		service.POST("/targets/tags", targetBindTags)
-		service.DELETE("/targets/tags", targetUnbindTags)
-		service.PUT("/targets/note", targetUpdateNote)
-		service.PUT("/targets/bgid", targetUpdateBgid)
+	if len(config.C.BasicAuth) != 0 {
+		service := r.Group("/v1/n9e", gin.BasicAuth(config.C.BasicAuth))
+		{
+			service.Any("/prometheus/*url", prometheusProxy)
+			service.POST("/users", userAddPost)
+		}
 	}
 }
