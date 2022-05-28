@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/toolkits/pkg/ginx"
+	"strconv"
 	// "os/exec"
 	// "strings"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	// "encoding/json"
 	// "os"
+	"github.com/didi/nightingale/v5/src/service"
 )
 
 type ClusterInfo struct {
@@ -114,6 +116,35 @@ func installCluster(c *gin.Context){
 	})
 }
 
+type PostgresConnect struct {
+	ConnectAddress string 
+	ConnectUser string 
+	ConnectPassword string 
+	ConnectDatabase string 
+	ConnectSslmode bool
+}
+
+type CreateDatabaseBody struct {
+	Host string `json:"host"`
+	Port  int `json:"port"`
+	ConnectUser string `json:"connect_user"`
+	ConnectPassword string   `json:"connect_password"`
+	ConnectDatabase string  `json:"connect_database"`
+	ConnectSslmode  bool		 `json:"connect_sslmode`
+}
+
+func Pginit(connect PostgresConnect) service.Service {
+	svc := service.Service{
+		ConnectAddress: connect.ConnectAddress,
+		ConnectUser: connect.ConnectUser, 
+		ConnectPassword: connect.ConnectPassword,
+		ConnectDatabase: connect.ConnectDatabase,
+		ConnectSslmode: connect.ConnectSslmode,
+		MaxIdle: 1,
+		MaxOpen: 1,
+	}
+	return svc
+}
 func initCluster(c *gin.Context){
 	var status int = 1
 	var msg string = "initizlization successed"
@@ -133,6 +164,36 @@ func initCluster(c *gin.Context){
 	if err != nil {
 		fmt.Println("error:", err)
 	}
+	ginx.Dangerous(err)
+	c.JSON(200, gin.H{
+		"status": status,
+		"msg":  msg,
+		"cluster_id":  cluster_id,
+	})
+}
+
+func createDatabase(c *gin.Context){
+	var status int = 1
+	var msg string = "initizlization successed"
+	var cluster_id string = "seaboxmpp-e4230eba4894"
+	var body CreateDatabaseBody
+	var err error
+	c.BindJSON(&body)
+	fmt.Println("==data===>>>", body)
+
+	var query  = `create database zzm`
+	var address string = body.Host + ":" + strconv.Itoa(body.Port)
+	connect := PostgresConnect {
+		ConnectAddress: address,
+		ConnectUser: body.ConnectUser,
+		ConnectPassword: body.ConnectPassword,
+		ConnectDatabase: body.ConnectDatabase,
+		ConnectSslmode: body.ConnectSslmode,
+
+	}
+	pg := Pginit(connect)
+	err = pg.ExecQuery(query)
+
 	ginx.Dangerous(err)
 	c.JSON(200, gin.H{
 		"status": status,

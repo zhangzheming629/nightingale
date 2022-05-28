@@ -233,6 +233,7 @@ func configRoute(r *gin.Engine, version string) {
 		//Open Api
 		pages.POST("/v1/InstallCluster", installCluster)
 		pages.POST("/v1/InitCluster", initCluster)
+		pages.POST("/v1/CreateDatabase", createDatabase)
 		pages.POST("/v1/UninstallCluster", uninstallCluster)
 		pages.POST("/v1/ModifyLogDir", modifyLogDir)
 		pages.POST("/v1/DumpDatabase", dumpDatabase)
