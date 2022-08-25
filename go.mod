@@ -36,6 +36,7 @@ require (
 	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/toolkits/pkg v1.2.9
 	github.com/urfave/cli/v2 v2.3.0
+	github.com/wumansgy/goEncrypt v1.0.0
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
