@@ -49,7 +49,7 @@ KKRFfpuebqdaR50SDa4Lq6JbqYtwg0CLZeju4Mq41i9F2p4myqVDUsZs
 var VERSION = "not specified"
 
 func main() {
-	cli, err := clientv3.New(clientv3.Config{
+	etcdCli, err := clientv3.New(clientv3.Config{
 		Endpoints:   []string{"localhost:2379"},
 		DialTimeout: 5 * time.Second,
 	})
@@ -57,14 +57,19 @@ func main() {
 		// handle error!
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	resp, err := cli.Get(ctx, "/zzm")
-	fmt.Println(resp)
+	getResp, err := etcdCli.Get(ctx, "/zzm")
+	for _, v := range getResp.Kvs {
+		if string(v.Key) == "/zzm" {
+			fmt.Println(string(v.Key), ":", string(v.Value))
+		}
+	}
 	cancel()
 	if err != nil {
 		// handle error!
 	}
 	// use the response
-	defer cli.Close()
+	defer etcdCli.Close()
+
 	ciphertext, err := base64.StdEncoding.DecodeString(`mFWBdT4Y70ZNEQ7PVIFKwbkefufu52WGXYLrW0Vk1XuajrrEE54dqj4VK2yuGIeMq5bHKAdkDnACB2ABzHLQuobTDpkS0Nj5AlJvwbRDV3pOCB1x0q3aqEooTppeMs8P/WG3YCRDTQPWgZISPsFBQVT1tk77BiImcY4SZM9IL0B4TFUKS9sShnjAebxmJkj8jfYYh7gNzUY0YMvOV6HuiT5C0RsbTe1jwMyN87QEwvpvuPelkeQ8LX1AG+qsn2q4TvOYEKCNfNnePjMIQ/5MlesledwiqUpc/YtY3qj4Qx+8b5luaQ6kyu+zyOXV/A0XjjxIxqLWKU8eAl7eA3o72Q==`)
 	if err != nil {
 		return
