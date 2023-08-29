@@ -57,11 +57,10 @@ func main() {
 		// handle error!
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	getResp, err := etcdCli.Get(ctx, "/zzm")
+	getResp, err := etcdCli.Get(ctx, "/seabox/topology/coordinator/1")
+	fmt.Println(getResp)
 	for _, v := range getResp.Kvs {
-		if string(v.Key) == "/zzm" {
-			fmt.Println(string(v.Key), ":", string(v.Value))
-		}
+	   fmt.Println(string(v.Key), ":", string(v.Value))
 	}
 	cancel()
 	if err != nil {
