@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/robfig/cron/v3"
 	"github.com/toolkits/pkg/runner"
 	"github.com/urfave/cli/v2"
 
@@ -45,6 +46,9 @@ KKRFfpuebqdaR50SDa4Lq6JbqYtwg0CLZeju4Mq41i9F2p4myqVDUsZs
 // VERSION go build -ldflags "-X main.VERSION=x.x.x"
 var VERSION = "not specified"
 
+func hello() {
+	fmt.Println("hello")
+}
 func main() {
 	ciphertext, err := base64.StdEncoding.DecodeString(`mFWBdT4Y70ZNEQ7PVIFKwbkefufu52WGXYLrW0Vk1XuajrrEE54dqj4VK2yuGIeMq5bHKAdkDnACB2ABzHLQuobTDpkS0Nj5AlJvwbRDV3pOCB1x0q3aqEooTppeMs8P/WG3YCRDTQPWgZISPsFBQVT1tk77BiImcY4SZM9IL0B4TFUKS9sShnjAebxmJkj8jfYYh7gNzUY0YMvOV6HuiT5C0RsbTe1jwMyN87QEwvpvuPelkeQ8LX1AG+qsn2q4TvOYEKCNfNnePjMIQ/5MlesledwiqUpc/YtY3qj4Qx+8b5luaQ6kyu+zyOXV/A0XjjxIxqLWKU8eAl7eA3o72Q==`)
 	if err != nil {
@@ -55,6 +59,13 @@ func main() {
 	if err != nil {
 		return
 	}
+	c := cron.New()
+	c.AddFunc("@every 1s", hello)
+	c.Start()
+	defer c.Stop()
+	var ch = make(chan int)
+	<-ch
+
 	fmt.Println("明文：", string(plaintext)) // test
 	app := cli.NewApp()
 	app.Name = "n9e"
