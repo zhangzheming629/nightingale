@@ -34,19 +34,15 @@ require (
 	github.com/prometheus/prometheus v2.5.0+incompatible
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/rogpeppe/go-internal v1.6.2 // indirect
-	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/toolkits/pkg v1.2.9
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/wumansgy/goEncrypt v1.0.0
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
+	github.com/xuri/excelize/v2 v2.8.0
 	google.golang.org/genproto v0.0.0-20220207164111-0872dc986b00 // indirect
 	google.golang.org/grpc v1.46.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/driver/postgres v1.1.1
 	gorm.io/gorm v1.21.15
