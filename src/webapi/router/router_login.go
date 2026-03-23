@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
+        "errors"
+        "io"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/toolkits/pkg/ginx"
@@ -19,11 +20,41 @@ type loginForm struct {
 }
 
 
+func CallAuth(token string) (string, error){
+  address := config.C.AuthServer.Address
+  requestUrl := address+"/auth2/api/v2/user/getLoginUser"
+  fmt.Println("CallAuth requestUrl:", requestUrl) 
+  req,_ := http.NewRequest("GET", requestUrl, nil) 
+  fmt.Println("token:", token)
+  //token = "Bearer " + token 
+  req.Header.Add("Authorization", token)
+  client := &http.Client{}
+  resp, err := client.Do(req)
+  if err != nil{
+    fmt.Println(err)
+    return "",err
+  }
+  resBody, _ := io.ReadAll(resp.Body)
+  requestBody := string(resBody)
+  if requestBody == "400 Bad Request" {
+     return requestBody, errors.New("请求auth错误")
+  }
+  defer resp.Body.Close()
+  return requestBody, nil
+}
 
 func authLoginPost(c *gin.Context) {
      fmt.Println("authLoginPost")
      token := c.GetHeader("Authorization")
      fmt.Println(token)
+     authReturn, err := CallAuth(token)     
+     if err != nil {
+        fmt.Println(err)
+        ginx.NewRender(c).Message(err)
+        return
+     }
+     fmt.Println(authReturn)
+     
 }
 
 func loginPost(c *gin.Context) {

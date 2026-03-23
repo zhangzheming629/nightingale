@@ -32,11 +32,9 @@ require (
 	github.com/prometheus/client_golang v1.12.1
 	github.com/prometheus/common v0.32.1
 	github.com/prometheus/prometheus v2.5.0+incompatible
-	github.com/robfig/cron/v3 v3.0.0
 	github.com/rogpeppe/go-internal v1.6.2 // indirect
 	github.com/toolkits/pkg v1.2.9
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/wumansgy/goEncrypt v1.0.0
 	github.com/xuri/excelize/v2 v2.8.0
 	google.golang.org/genproto v0.0.0-20220207164111-0872dc986b00 // indirect
 	google.golang.org/grpc v1.46.0 // indirect

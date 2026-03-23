@@ -92,6 +92,7 @@ type Config struct {
 	Postgres        storage.Postgres
 	Clusters        []prom.Options
 	Ibex            Ibex
+        AuthServer      AuthServer
 }
 
 type ContactKey struct {
@@ -116,6 +117,10 @@ type Ibex struct {
 	BasicAuthUser string
 	BasicAuthPass string
 	Timeout       int64
+}
+
+type AuthServer struct {
+     Address string
 }
 
 func (c *Config) IsDebugMode() bool {
