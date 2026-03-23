@@ -83,7 +83,14 @@ func authLoginPost(c *gin.Context) {
      var result AuthReturnBody 
      err = json.Unmarshal([]byte(authReturn), &result)
      if err != nil {
-       fmt.Println(err)  
+       fmt.Println(err)       
+       returnBody := AuthLoginReturnBody{
+         Status: result.Status,
+         Msg: result.Msg,
+         Success: result.Success,
+         Data: result.Data,
+       }
+       ginx.NewRender(c).Data(returnBody, nil)
        return
      } 
     
@@ -92,6 +99,8 @@ func authLoginPost(c *gin.Context) {
      fmt.Println(result.Data.UserLoginName)
      fmt.Println(result.Data.PhoneNumber)
      fmt.Println(result.Data.EmailAddress)
+     
+     // user, err := UserGetByUsername(u.Username)
      returnBody := AuthLoginReturnBody{
        Status: result.Status,
        Msg: result.Msg,
