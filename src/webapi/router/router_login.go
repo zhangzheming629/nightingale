@@ -93,14 +93,34 @@ func authLoginPost(c *gin.Context) {
        ginx.NewRender(c).Data(returnBody, nil)
        return
      } 
-    
-     fmt.Println(result)
-     fmt.Println(result.Data)
-     fmt.Println(result.Data.UserLoginName)
-     fmt.Println(result.Data.PhoneNumber)
-     fmt.Println(result.Data.EmailAddress)
      
-     // user, err := UserGetByUsername(u.Username)
+     fmt.Println(result)
+     // fmt.Println(result.Data)
+     // fmt.Println(result.Data.UserLoginName)
+     // fmt.Println(result.Data.PhoneNumber)
+     // fmt.Println(result.Data.EmailAddress)
+     
+     // 判断用户是否存在 
+     username := result.Data.UserLoginName
+     phone := result.Data.PhoneNumber
+     email := result.Data.EmailAddress
+     user, err := models.UserGetByUsername(username)
+     if user == nil {
+       // 用户不存在则创建,角色为DBA
+       u := models.User {
+          Username: username,
+          Phone: phone,
+          Email: email,
+          Roles: "DBA",
+          CreateBy: "auth",
+          UpdateBy: "auth",
+       }
+       u.Add()
+       fmt.Println(u)
+     }else {
+       // 用户存在则登录
+     }
+
      returnBody := AuthLoginReturnBody{
        Status: result.Status,
        Msg: result.Msg,
