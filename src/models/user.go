@@ -35,7 +35,7 @@ type User struct {
 }
 
 func (u *User) TableName() string {
-	return "user"
+	return "sdms_user"
 }
 
 func (u *User) IsAdmin() bool {
@@ -164,9 +164,10 @@ func UserGetById(id int64) (*User, error) {
 }
 
 func InitRoot() {
-	user, err := UserGetByUsername("root")
+        user, err := UserGetByUsername("admin")
+	//user, err := UserGetByUsername("root")
 	if err != nil {
-		fmt.Println("failed to query user root:", err)
+		fmt.Println("failed to query user admin:", err)
 		os.Exit(1)
 	}
 
