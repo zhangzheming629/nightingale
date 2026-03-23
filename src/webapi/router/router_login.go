@@ -100,12 +100,15 @@ func authLoginPost(c *gin.Context) {
      // fmt.Println(result.Data.PhoneNumber)
      // fmt.Println(result.Data.EmailAddress)
      
-     // 判断用户是否存在 
+     var user *models.User
+
      username := result.Data.UserLoginName
      phone := result.Data.PhoneNumber
      email := result.Data.EmailAddress
-     user, err := models.UserGetByUsername(username)
-     if user == nil {
+     
+     // 判断用户是否存在
+     existUser, err := models.UserGetByUsername(username)
+     if existUser == nil {
        // 用户不存在则创建,角色为DBA
        u := models.User {
           Username: username,
@@ -117,17 +120,24 @@ func authLoginPost(c *gin.Context) {
        }
        u.Add()
        fmt.Println(u)
+       user, err = models.UserGetByUsername(username)
+       if err != nil {
+          ginx.Dangerous(err)
+       }
      }else {
-       // 用户存在则登录
+       user = existUser
      }
+     // 登录
+     userIdentity := fmt.Sprintf("%d-%s", user.Id, user.Username)
+     ts, err := createTokens(config.C.JWTAuth.SigningKey, userIdentity)
+     ginx.Dangerous(err)
+     ginx.Dangerous(createAuth(c.Request.Context(), userIdentity, ts))
 
-     returnBody := AuthLoginReturnBody{
-       Status: result.Status,
-       Msg: result.Msg,
-       Success: result.Success,
-       Data: result.Data,
-     }
-     ginx.NewRender(c).Data(returnBody, nil)
+     ginx.NewRender(c).Data(gin.H{
+                "user":          user,
+                "access_token":  ts.AccessToken,
+                "refresh_token": ts.RefreshToken,
+     }, nil) 
 }
 
 func loginPost(c *gin.Context) {
