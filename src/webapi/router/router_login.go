@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
         "errors"
+        "encoding/json"
         "io"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -43,6 +44,31 @@ func CallAuth(token string) (string, error){
   return requestBody, nil
 }
 
+type AuthReturnBody struct {
+  Status int `json:"status"`
+  Msg    string `json:"msg"`
+  Success bool `json:"success"`
+  Data   Data `json:"data"`
+}
+
+type Data struct{
+  // UserId string `json:"userId"`
+  // TenantName string `json: "tenantName"`
+  // TenantId string `json: "tenantId"`
+  UserLoginName string `json: "userLoginName"`
+  PhoneNumber string `json: "phoneNumber"`
+  EmailAddress string `json: "emailAddress"` 
+}
+
+
+type AuthLoginReturnBody struct {
+  Status int `json:"status"`
+  Msg    string `json:"msg"`
+  Success bool `json:"success"`
+  Data   Data `json:"data"`
+}
+
+
 func authLoginPost(c *gin.Context) {
      fmt.Println("authLoginPost")
      token := c.GetHeader("Authorization")
@@ -54,7 +80,25 @@ func authLoginPost(c *gin.Context) {
         return
      }
      fmt.Println(authReturn)
-     
+     var result AuthReturnBody 
+     err = json.Unmarshal([]byte(authReturn), &result)
+     if err != nil {
+       fmt.Println(err)  
+       return
+     } 
+    
+     fmt.Println(result)
+     fmt.Println(result.Data)
+     fmt.Println(result.Data.UserLoginName)
+     fmt.Println(result.Data.PhoneNumber)
+     fmt.Println(result.Data.EmailAddress)
+     returnBody := AuthLoginReturnBody{
+       Status: result.Status,
+       Msg: result.Msg,
+       Success: result.Success,
+       Data: result.Data,
+     }
+     ginx.NewRender(c).Data(returnBody, nil)
 }
 
 func loginPost(c *gin.Context) {
