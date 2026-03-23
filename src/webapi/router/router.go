@@ -110,7 +110,8 @@ func configRoute(r *gin.Engine, version string) {
 			c.String(200, version)
 		})
 
-		pages.POST("/auth/login", loginPost)
+		pages.POST("/auth/auth-login", authLoginPost)
+                pages.POST("/auth/login", loginPost)
 		pages.POST("/auth/logout", logoutPost)
 		pages.POST("/auth/refresh", refreshPost)
 

@@ -18,6 +18,14 @@ type loginForm struct {
 	Password string `json:"password" binding:"required"`
 }
 
+
+
+func authLoginPost(c *gin.Context) {
+     fmt.Println("authLoginPost")
+     token := c.GetHeader("Authorization")
+     fmt.Println(token)
+}
+
 func loginPost(c *gin.Context) {
 	var f loginForm
 	ginx.BindJSON(c, &f)
